@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أرشيف نابل الشعري</title>
+    <meta name="theme-color" content="#1B4D89">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Tajawal:wght@300;400;500;700;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-bg: #f2f0e9;
+            --vivid-blue: #1B4D89;
+            --vivid-orange: #f4c430;
+            --vivid-green: #2d5a27;
+            --neon-cyan: #00ffff;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        .poetry-font {
+            font-family: 'Amiri', serif;
+        }
+
+        .calligraphy-font {
+            font-family: 'Aref Ruqaa', serif;
+        }
+
+        /* Neon & Space Styles */
+        .neon-border {
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .neon-text {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .space-overlay {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Photocopy Style Utilities */
+        .photocopy-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/recycled-paper.png");
+        }
+
+        .photocopy-effect {
+            filter: contrast(1.8) brightness(0.9) grayscale(1);
+        }
+
+        @keyframes ink-bleed {
+            0% { filter: blur(8px) contrast(5); opacity: 0; transform: scale(0.98); }
+            100% { filter: blur(0.4px) contrast(1.8); opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes text-reveal {
+            0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .animate-ink {
+            animation: ink-bleed 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .animate-text-reveal {
+            animation: text-reveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: currentColor;
+            border-radius: 10px;
+        }
+
+        /* Brutalist Shadows */
+        .brutalist-shadow {
+            box-shadow: 8px 8px 0px 0px currentColor;
+        }
+
+        /* Vivid Gradient Animations */
+        .vivid-bg {
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #050505);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        iframe {
+            border: none;
+            border-radius: 15px;
+            background: #111;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.39.0"
+  }
+}
+</script>
+</head>
+<body class="vivid-bg">
+    <div id="root"></div>
+</body>
+</html>
