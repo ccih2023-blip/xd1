@@ -68,7 +68,7 @@ const App: React.FC = () => {
       .select('*')
       .order('publishDate', { ascending: false });
 
-    const allLocations = data || INITIAL_LOCATIONS;
+    const allLocations = (data && data.length > 0) ? data : INITIAL_LOCATIONS;
     setLocations(allLocations);
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -146,7 +146,7 @@ const App: React.FC = () => {
 
     setArchivePopupData({
       title: "تم فك الشفرة!",
-      description: `لقد تم شراء المخطوطة بنجاح.`,
+      description: `لقد تم شراء المخطوطة بنجاح بياسمينك الرقمي.`,
       asset_type: 'text'
     });
   };
@@ -165,7 +165,7 @@ const App: React.FC = () => {
     setIsPortalOpen(false);
     setArchivePopupData({
       title: "إطلاق ناجح",
-      description: `تم إرساء الموقع الجديد "${newLoc.name}" بنجاح.`,
+      description: `تم إرساء الموقع الجديد "${newLoc.name}" في مدينة نابل بنجاح.`,
       asset_type: 'text'
     });
   };
@@ -175,7 +175,7 @@ const App: React.FC = () => {
       <div className="fixed inset-0 flex items-center justify-center bg-[#f4f1ea]">
         <div className="text-center animate-ink">
           <div className="w-24 h-24 border-8 border-t-[#1B4D89] rounded-full animate-spin mb-6"></div>
-          <p className="text-2xl font-black calligraphy-font">جاري استرجاع الأرشيف...</p>
+          <p className="text-2xl font-black calligraphy-font">جاري استرجاع أرشيف نابل...</p>
         </div>
       </div>
     );
@@ -192,7 +192,7 @@ const App: React.FC = () => {
         />
         <div className="mb-12 text-center animate-ink">
           <h1 className="text-6xl md:text-8xl font-black calligraphy-font text-[#1B4D89] mb-4">أرشيف نابل</h1>
-          <p className="text-xl font-bold opacity-60 uppercase tracking-[0.3em]">بوابة الإرساء الشعري الرقمي</p>
+          <p className="text-xl font-bold opacity-60 uppercase tracking-[0.3em]">بوابة الإرساء الشعري للمدينة</p>
         </div>
 
         <div className="max-w-md w-full animate-text-reveal">
@@ -256,11 +256,11 @@ const App: React.FC = () => {
       }`}>
         <div className="flex items-center gap-4 group cursor-pointer" onClick={() => supabase.auth.signOut()}>
           <div className={`w-12 h-12 flex items-center justify-center border-4 transition-transform group-hover:rotate-12 ${profile?.role === 'admin' ? 'bg-white text-black border-white' : 'bg-white text-[#1B4D89] border-white'}`}>
-             <span className="text-2xl font-black">{profile?.role === 'admin' ? 'A' : 'P'}</span>
+             <span className="text-2xl font-black">{profile?.role === 'admin' ? 'A' : 'N'}</span>
           </div>
           <div className="hidden sm:block">
             <h1 className="text-2xl font-black calligraphy-font leading-none">
-              {profile?.role === 'admin' ? 'إدارة الأرشيف' : (profile?.name || 'رواق نابل')}
+              {profile?.role === 'admin' ? 'إدارة الأرشيف' : (profile?.name || 'مجلس نابل')}
             </h1>
             <p className="text-[9px] font-mono font-bold uppercase tracking-[0.3em] opacity-60">
               {session.user.email}
@@ -269,12 +269,6 @@ const App: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-4 md:gap-8">
-          {deferredPrompt && (
-            <button onClick={handleInstallClick} className="hidden md:flex items-center gap-2 px-6 py-2 bg-[#f4c430] text-[#1B4D89] border-4 border-white font-black text-xs animate-bounce">
-              تثبيت التطبيق
-            </button>
-          )}
-
           <button 
             onClick={() => setIsPortalOpen(true)}
             className={`px-8 py-3 border-4 font-black transition-all text-sm bg-white text-black border-white hover:bg-orange-400`}
@@ -291,10 +285,10 @@ const App: React.FC = () => {
             </button>
           )}
 
-          {/* Fix: Line 294 - Comparison between boolean and string corrected */}
           {profile?.role !== 'admin' && (
-            <div className="bg-white/10 border-4 border-white/20 px-6 py-2 rounded-xl flex flex-col items-center">
+            <div className="bg-white/10 border-4 border-white/20 px-6 py-2 rounded-xl flex items-center gap-2">
                <span className="text-2xl font-black">{profile?.balance || 0}</span>
+               <span className="text-xs font-bold">ياسمينة</span>
             </div>
           )}
         </div>
@@ -341,10 +335,7 @@ const App: React.FC = () => {
       {selectedLocation && (
         <PoemModal 
           location={selectedLocation} 
-          onClose={() => {
-            setSelectedLocation(null);
-            window.history.replaceState({}, '', window.location.origin + window.location.pathname);
-          }} 
+          onClose={() => setSelectedLocation(null)} 
           onPurchase={handlePurchase}
           walletBalance={profile?.balance || 0}
           theme={theme}

@@ -16,8 +16,6 @@ interface PoetPortalProps {
 type Tab = 'new' | 'archive' | 'profile';
 type Step = 'details' | 'uploading_files' | 'review' | 'launch_center';
 
-const MAX_FILE_SIZE = 15 * 1024 * 1024;
-
 const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords, theme, profile, onProfileUpdate }) => {
   const [activeTab, setActiveTab] = useState<Tab>(coords ? 'new' : 'archive');
   const [step, setStep] = useState<Step>('details');
@@ -117,7 +115,6 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
     setStep('details');
   };
 
-  // وظيفة جلب المصغرة كما طلب المستخدم
   const getGoogleThumbnail = (fileId: string) => {
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w500`;
   };
@@ -170,13 +167,12 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
   const startLaunchSequence = async () => {
     setShowConfirm(false);
     setStep('launch_center');
-    setStatusMessage('جاري الإرساء الرقمي...');
+    setStatusMessage('جاري الإرساء الرقمي في الأحساء...');
 
     try {
       let muralUrl = uploadedUrls.videoMural;
       let muralType: 'image' | 'video' = formData.muralMode === 'video' ? 'video' : 'image';
       
-      // توليد المصغرة إذا وجد معرف ملف
       const thumbnail_url = formData.drive_file_id 
         ? getGoogleThumbnail(formData.drive_file_id) 
         : (muralType === 'image' ? muralUrl : '');
@@ -223,8 +219,9 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
       
       {showConfirm && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
-          <div className={`w-full max-w-md p-10 border-8 ${isVivid ? 'bg-white border-[#1B4D89] rounded-[2rem]' : 'bg-white border-black'}`}>
+          <div className={`w-full max-w-md p-10 border-8 ${isVivid ? 'bg-white border-[#2d5a27] rounded-[2rem]' : 'bg-white border-black'}`}>
             <h3 className="text-3xl font-black mb-6">تأكيد الإرساء الرقمي</h3>
+            <p className="mb-6 opacity-60">سيتم تثبيت قصيدتك في خريطة الأحساء.</p>
             <div className="flex gap-4">
               <button onClick={() => setShowConfirm(false)} className="flex-1 py-4 font-black border-4">تراجع</button>
               <button onClick={startLaunchSequence} className={`flex-1 py-4 font-black border-4 bg-black text-white`}>تأكيد</button>
@@ -233,12 +230,12 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
         </div>
       )}
 
-      <div className={`w-full max-w-5xl h-[85vh] overflow-hidden flex flex-col border-8 ${isVivid ? 'bg-white border-[#1B4D89] rounded-[3rem]' : 'bg-white border-black'}`}>
-        <div className={`flex border-b-8 ${isVivid ? 'bg-[#1B4D89] border-[#1B4D89]' : 'bg-black border-black'}`}>
+      <div className={`w-full max-w-5xl h-[85vh] overflow-hidden flex flex-col border-8 ${isVivid ? 'bg-white border-[#2d5a27] rounded-[3rem]' : 'bg-white border-black'}`}>
+        <div className={`flex border-b-8 ${isVivid ? 'bg-[#2d5a27] border-[#2d5a27]' : 'bg-black border-black'}`}>
           <button onClick={() => setActiveTab('new')} className={`flex-1 py-6 font-black text-xl transition-all ${activeTab === 'new' ? 'bg-white text-black' : 'text-white hover:bg-white/10'}`}>
             {formData.id ? 'تعديل مخطوطة' : 'إرساء جديد'}
           </button>
-          <button onClick={() => setActiveTab('archive')} className={`flex-1 py-6 font-black text-xl transition-all ${activeTab === 'archive' ? 'bg-white text-black' : 'text-white hover:bg-white/10'}`}>أرشيفي الخاص</button>
+          <button onClick={() => setActiveTab('archive')} className={`flex-1 py-6 font-black text-xl transition-all ${activeTab === 'archive' ? 'bg-white text-black' : 'text-white hover:bg-white/10'}`}>أرشيفي الشعري</button>
           <button onClick={() => setActiveTab('profile')} className={`flex-1 py-6 font-black text-xl transition-all ${activeTab === 'profile' ? 'bg-white text-black' : 'text-white hover:bg-white/10'}`}>الملف الشخصي</button>
           <button onClick={onClose} className="px-8 text-white hover:rotate-90 transition-transform">
              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -251,35 +248,34 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
               {step === 'details' && (
                 <form onSubmit={handleStartReviewProcess} className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <input required placeholder="عنوان المعلم" className="w-full p-4 border-4 text-xl font-bold" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                    <input required placeholder="عنوان المعلم (مثال: قصر إبراهيم)" className="w-full p-4 border-4 text-xl font-bold" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                     <input required placeholder="اسم الشاعر المستعار" className="w-full p-4 border-4 text-xl font-bold" value={formData.poet} onChange={e => setFormData({...formData, poet: e.target.value})} />
                   </div>
-                  <input placeholder="Google Drive File ID (اختياري للمعاينة الكاملة)" className="w-full p-4 border-4 font-mono" value={formData.drive_file_id} onChange={e => setFormData({...formData, drive_file_id: e.target.value})} />
-                  <textarea placeholder="نص القصيدة..." className="w-full p-6 border-4 h-48 poetry-font text-3xl" value={formData.poemText} onChange={e => setFormData({...formData, poemText: e.target.value})} />
+                  <input placeholder="Google Drive File ID (اختياري للمعالجة)" className="w-full p-4 border-4 font-mono" value={formData.drive_file_id} onChange={e => setFormData({...formData, drive_file_id: e.target.value})} />
+                  <textarea placeholder="نص القصيدة الأحسائية..." className="w-full p-6 border-4 h-48 poetry-font text-3xl" value={formData.poemText} onChange={e => setFormData({...formData, poemText: e.target.value})} />
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                     <div className="p-4 border-4 border-dashed relative">
+                     <div className="p-4 border-4 border-dashed relative text-center">
                         <span className="text-xs font-black block mb-2 uppercase">صورة الشاعر</span>
                         <input type="file" accept="image/*" onChange={e => setPoetImageFile(e.target.files?.[0] || null)} className="absolute inset-0 opacity-0 cursor-pointer" />
-                        <p className="truncate text-xs">{poetImageFile ? poetImageFile.name : 'اختر ملف...'}</p>
+                        <p className="truncate text-xs">{poetImageFile ? poetImageFile.name : 'اسحب ملفك هنا...'}</p>
                      </div>
-                     <div className="p-4 border-4 border-dashed relative">
+                     <div className="p-4 border-4 border-dashed relative text-center">
                         <span className="text-xs font-black block mb-2 uppercase">التسجيل الصوتي</span>
                         <input type="file" accept="audio/*" onChange={e => setAudioFile(e.target.files?.[0] || null)} className="absolute inset-0 opacity-0 cursor-pointer" />
-                        <p className="truncate text-xs">{audioFile ? audioFile.name : 'اختر ملف...'}</p>
+                        <p className="truncate text-xs">{audioFile ? audioFile.name : 'سجل صوتك وارفع...'}</p>
                      </div>
                   </div>
-                  <button type="submit" className="w-full py-8 bg-black text-white font-black text-3xl brutalist-shadow">المتابعة والمراجعة ←</button>
+                  <button type="submit" className="w-full py-8 bg-black text-white font-black text-3xl brutalist-shadow">المراجعة قبل الإرساء ←</button>
                 </form>
               )}
-              {step === 'uploading_files' && <div className="p-20 text-center text-4xl font-black">جاري المعالجة الرقمية...</div>}
+              {step === 'uploading_files' && <div className="p-20 text-center text-4xl font-black">جاري المعالجة الرقمية لواحة الأحساء...</div>}
               {step === 'review' && (
                 <div className="space-y-8 text-center">
                    <div className="p-10 border-8 border-double bg-gray-50">
                       <h3 className="text-5xl font-black calligraphy-font">{formData.name}</h3>
                       <div className="p-12 text-5xl poetry-font leading-relaxed">{formData.poemText}</div>
-                      {formData.drive_file_id && <p className="text-xs font-mono opacity-40">Thumbnail will be linked to ID: {formData.drive_file_id}</p>}
                    </div>
-                   <button onClick={() => setShowConfirm(true)} className="w-full py-8 bg-black text-white font-black text-3xl">تأكيد النشر النهائي</button>
+                   <button onClick={() => setShowConfirm(true)} className="w-full py-8 bg-black text-white font-black text-3xl">تثبيت في الخريطة</button>
                 </div>
               )}
               {step === 'launch_center' && <div className="p-20 text-center animate-pulse text-4xl font-black">{statusMessage}</div>}
@@ -288,11 +284,11 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
 
           {activeTab === 'archive' && (
             <div className="animate-text-reveal space-y-8">
-               <h3 className="text-3xl font-black calligraphy-font border-b-4 pb-4">مخطوطاتك في نابل</h3>
+               <h3 className="text-3xl font-black calligraphy-font border-b-4 pb-4">أرشيفك الشعري في الواحة</h3>
                {loadingArchive ? (
                  <div className="p-20 text-center text-xl">جاري فحص السجلات...</div>
                ) : userPoems.length === 0 ? (
-                 <div className="p-20 text-center text-gray-400 italic">لا توجد مخطوطات مسجلة باسمك بعد.</div>
+                 <div className="p-20 text-center text-gray-400 italic">لا توجد قصائد مسجلة في واحة الأحساء باسمك بعد.</div>
                ) : (
                  <div className="grid grid-cols-1 gap-6">
                     {userPoems.map(poem => (
@@ -301,7 +297,7 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
                           {poem.thumbnail_url && <img src={poem.thumbnail_url} className="w-16 h-16 object-cover border-2 border-black" />}
                           <div>
                             <h4 className="text-2xl font-black">{poem.name}</h4>
-                            <p className="opacity-60 text-xs font-mono uppercase mt-2">Views: {poem.views || 0}</p>
+                            <p className="opacity-60 text-xs font-mono uppercase mt-2">المشاهدات: {poem.views || 0}</p>
                           </div>
                         </div>
                         <div className="flex gap-4">
@@ -317,18 +313,18 @@ const PoetPortal: React.FC<PoetPortalProps> = ({ onAddLocation, onClose, coords,
 
           {activeTab === 'profile' && (
             <div className="animate-text-reveal max-w-2xl mx-auto py-12">
-               <h3 className="text-3xl font-black calligraphy-font mb-10 text-center">بيانات الشاعر</h3>
+               <h3 className="text-3xl font-black calligraphy-font mb-10 text-center">مجلس الشاعر</h3>
                <form onSubmit={handleUpdateProfile} className="space-y-8">
                   <div className="space-y-2">
                      <label className="font-black text-xs uppercase opacity-60">اسم العرض</label>
                      <input className="w-full p-4 border-4 text-xl font-bold" value={profileData.name} onChange={e => setProfileData({...profileData, name: e.target.value})} />
                   </div>
                   <div className="space-y-2">
-                     <label className="font-black text-xs uppercase opacity-60">سيرة شعرية قصيرة</label>
+                     <label className="font-black text-xs uppercase opacity-60">نبذة شعرية</label>
                      <textarea className="w-full p-4 border-4 h-32 text-lg font-medium" value={profileData.bio} onChange={e => setProfileData({...profileData, bio: e.target.value})} />
                   </div>
                   <button type="submit" disabled={savingProfile} className="w-full py-6 bg-black text-white font-black text-2xl brutalist-shadow">
-                     {savingProfile ? 'جاري الحفظ...' : 'حفظ التعديلات'}
+                     {savingProfile ? 'جاري الحفظ...' : 'تحديث البيانات'}
                   </button>
                </form>
             </div>
