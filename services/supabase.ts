@@ -1,6 +1,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+// محاولة جلب القيم من البيئة (Vercel) أو استخدام القيم الافتراضية
 const supabaseUrl = 'https://adoeguytakweqgqtmarv.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkb2VndXl0YWt3ZXFncXRtYXJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NzE1MTYsImV4cCI6MjA4NTU0NzUxNn0.2YN8SOaMU6EXwMti26EWrnGDKUmN_r-qyJ-sxugXies';
 
