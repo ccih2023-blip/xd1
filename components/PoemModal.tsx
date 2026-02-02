@@ -80,7 +80,7 @@ const PoemModal: React.FC<PoemModalProps> = ({ location, onClose, onPurchase, wa
   };
 
   const shareLink = () => {
-    const url = `${window.location.origin}?id=${location.id}`;
+    const url = `${window.location.origin}/?id=${location.id}`;
     navigator.clipboard.writeText(url);
     setShowShareTooltip(true);
     setTimeout(() => setShowShareTooltip(false), 2000);
